@@ -3,6 +3,7 @@ package com.bookingmanager.springbootmicroservice.service;
 import com.bookingmanager.springbootmicroservice.common.ConfigureRooms;
 import com.bookingmanager.springbootmicroservice.common.ErrorMessage;
 import com.bookingmanager.springbootmicroservice.entity.Room;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 @Service
+@Slf4j
 public class SearchByDateService {
     @Autowired
     private RedisTemplate redisTemplate;
@@ -20,7 +22,7 @@ public class SearchByDateService {
         ArrayList<Room> availableRooms = new ArrayList<>();
         if (queryDate == 0) {
             ErrorMessage errorMessage = ErrorMessage.DATE_ERROR;
-            System.out.println("状态码：" + errorMessage.code() +
+            log.error("状态码：" + errorMessage.code() +
                     " 状态信息：" + errorMessage.msg());
             return availableRooms;
         }
@@ -34,7 +36,7 @@ public class SearchByDateService {
                 roomObj = redisTemplate.opsForValue().get(key);
                 if(roomObj == null){
                     // if the data still not exits
-                    System.out.println("Search from database");
+                    log.info("Search from database");
                     // start search from the database
                     if (!totalrooms.isEmpty()) {
                         for (Room room : totalrooms) {
@@ -53,12 +55,12 @@ public class SearchByDateService {
                     redisTemplate.opsForValue().set(key, availableRooms);
                     return availableRooms;
                 }else {
-                    System.out.println("Search from cache--synchronized");
+                    log.info("Search from cache--synchronized");
                     return availableRooms;
                 }
             }
         } else {
-            System.out.println("Search from cache");
+            log.info("Search from cache");
         }
         return availableRooms;
     }

@@ -2,8 +2,6 @@ package com.bookingmanager.springbootmicroservice.controller;
 
 import com.bookingmanager.springbootmicroservice.entity.Room;
 import com.bookingmanager.springbootmicroservice.service.SearchByDateService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
